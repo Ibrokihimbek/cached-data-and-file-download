@@ -1,3 +1,4 @@
+import 'package:cached_vc_download/screens/download/download.dart';
 import 'package:cached_vc_download/screens/users/users.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: UsersScreen(),
+      home: FileDownload(),
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:cached_vc_download/bloc/users_event.dart';
 import 'package:cached_vc_download/bloc/users_state.dart';
 import 'package:cached_vc_download/data/api_service/api_service.dart';
 import 'package:cached_vc_download/data/app_repository/company_repo.dart';
+import 'package:cached_vc_download/screens/download/download.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
@@ -20,6 +21,21 @@ class UsersScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text("Users"),
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => FileDownload(),
+                  ),
+                );
+              },
+              icon: const Icon(
+                Icons.next_plan_outlined,
+              ),
+            )
+          ],
         ),
         body: BlocConsumer<UsersBloc, UsersState>(
           builder: (context, state) {
