@@ -1,9 +1,10 @@
 import 'package:cached_vc_download/cubit/download_cubit.dart';
 import 'package:cached_vc_download/cubit/download_state.dart';
 import 'package:cached_vc_download/data/models/download_model/download_model.dart';
+import 'package:cached_vc_download/service/notification_cervise.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:open_file_safe/open_file_safe.dart';
+import 'package:open_filex/open_filex.dart';
 
 class SingleFileDownload extends StatelessWidget {
   final FileInfo fileInfo;
@@ -33,7 +34,7 @@ class SingleFileDownload extends StatelessWidget {
             trailing: IconButton(
               onPressed: () {
                 if (state.newFileLocation.isNotEmpty) {
-                  OpenFile.open(state.newFileLocation);
+                  OpenFilex.open(state.newFileLocation);
                 }
               },
               icon: const Icon(Icons.file_open),

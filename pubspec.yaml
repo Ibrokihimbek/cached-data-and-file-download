@@ -45,9 +45,9 @@ dependencies:
   sqflite: ^2.2.4+1
   path_provider: ^2.0.12
   permission_handler: ^10.2.0
-  open_file_safe: ^3.2.3
   equatable: ^2.0.5
-  # flutter_local_notifications: ^13.0.0
+  flutter_local_notifications: ^13.0.0
+  open_filex: ^4.3.2
 
 dev_dependencies:
   flutter_test:

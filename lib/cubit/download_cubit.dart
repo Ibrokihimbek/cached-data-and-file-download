@@ -2,10 +2,11 @@ import 'dart:io';
 
 import 'package:cached_vc_download/cubit/download_state.dart';
 import 'package:cached_vc_download/data/models/download_model/download_model.dart';
+import 'package:cached_vc_download/service/notification_cervise.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:open_file_safe/open_file_safe.dart';
+import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -51,7 +52,7 @@ class FileManagerCubit extends Cubit<FileManagerState> {
     if (!hasPermission) return;
 
     Dio dio = Dio();
-
+    LocalNotificationService.localNotificationService.showNotification(id: 10);
     var directory = await getDownloadPath();
     if (directory == null) {
       return;
@@ -70,7 +71,7 @@ class FileManagerCubit extends Cubit<FileManagerState> {
       },
     );
     if (filePath.contains(newFileLocation)) {
-      OpenFile.open(newFileLocation);
+      OpenFilex.open(newFileLocation);
     } else {
       try {
         await dio.download(
@@ -78,10 +79,14 @@ class FileManagerCubit extends Cubit<FileManagerState> {
           newFileLocation,
           onReceiveProgress: (count, total) {
             double pr = count / total;
-            emit(state.copyWith(progress: pr));
+            if (count == total) {
+              LocalNotificationService.localNotificationService
+                  .showNotificationByPushNotification(id: 11);
+              emit(state.copyWith(progress: pr));
+            }
           },
         );
-        OpenFile.open(newFileLocation);
+        OpenFilex.open(newFileLocation);
       } catch (e) {
         debugPrint('DOWNLOAD ERROR 2 $e');
       }
