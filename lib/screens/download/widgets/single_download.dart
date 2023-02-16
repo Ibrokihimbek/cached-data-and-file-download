@@ -28,8 +28,8 @@ class SingleFileDownload extends StatelessWidget {
               backgroundColor: Colors.grey,
             ),
             onTap: () {
-              context.read<FileManagerCubit>().downloadFile(
-                  fileName: fileInfo.fileName, fileUrl: fileInfo.fileUrl);
+              context.read<FileManagerCubit>().downloadFileWithIsolate(
+                  name: fileInfo.fileName, url: fileInfo.fileUrl);
             },
             trailing: IconButton(
               onPressed: () {

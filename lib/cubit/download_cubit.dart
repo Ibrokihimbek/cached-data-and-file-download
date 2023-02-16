@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:cached_vc_download/cubit/download_state.dart';
 import 'package:cached_vc_download/data/models/download_model/download_model.dart';
@@ -18,6 +19,14 @@ class FileManagerCubit extends Cubit<FileManagerState> {
             progress: 0.0,
           ),
         );
+
+  void downloadFileWithIsolate(
+      {required String name, required String url}) async {
+    await Isolate.run(
+      await downloadFile(fileName: name, fileUrl: url),
+    );
+    Isolate.exit();
+  }
 
   void downloadIfExists({required FileInfo fileInfo}) async {
     bool hasPermission = await _requestWritePermission();
@@ -47,12 +56,12 @@ class FileManagerCubit extends Cubit<FileManagerState> {
     }
   }
 
-  void downloadFile({required String fileName, required String fileUrl}) async {
+  Future downloadFile(
+      {required String fileName, required String fileUrl}) async {
     bool hasPermission = await _requestWritePermission();
     if (!hasPermission) return;
 
     Dio dio = Dio();
-    LocalNotificationService.localNotificationService.showNotification(id: 10);
     var directory = await getDownloadPath();
     if (directory == null) {
       return;
@@ -73,20 +82,26 @@ class FileManagerCubit extends Cubit<FileManagerState> {
     if (filePath.contains(newFileLocation)) {
       OpenFilex.open(newFileLocation);
     } else {
+      LocalNotificationService.localNotificationService
+          .showNotification(id: 10);
+
       try {
         await dio.download(
           fileUrl,
           newFileLocation,
-          onReceiveProgress: (count, total) {
+          onReceiveProgress: (count, total) async {
             double pr = count / total;
+            emitProgress(pr);
             if (count == total) {
               LocalNotificationService.localNotificationService
-                  .showNotificationByPushNotification(id: 11);
-              emit(state.copyWith(progress: pr));
+                  .showNotificationByPushNotification(
+                id: 11,
+                filePath: newFileLocation,
+              );
             }
           },
         );
-        OpenFilex.open(newFileLocation);
+        // OpenFilex.open(newFileLocation);
       } catch (e) {
         debugPrint('DOWNLOAD ERROR 2 $e');
       }
@@ -113,5 +128,9 @@ class FileManagerCubit extends Cubit<FileManagerState> {
       debugPrint('Cennot get Download folder path');
     }
     return directory;
+  }
+
+  emitProgress(double progress) {
+    emit(state.copyWith(progress: progress));
   }
 }

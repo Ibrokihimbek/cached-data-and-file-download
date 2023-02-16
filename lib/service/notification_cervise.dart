@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:open_filex/open_filex.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -41,10 +42,7 @@ class LocalNotificationService {
       ) {
         //Android
         if (notificationResponse.payload != null) {
-          Navigator.push(navigatorKey.currentContext!,
-              MaterialPageRoute(builder: (context) {
-            return Container();
-          }));
+          OpenFilex.open(notificationResponse.payload);
         } else {}
       },
     );
@@ -102,9 +100,8 @@ class LocalNotificationService {
     );
   }
 
-  void showNotificationByPushNotification({
-    required int id,
-  }) {
+  void showNotificationByPushNotification(
+      {required int id, required String filePath}) {
     flutterLocalNotificationsPlugin.show(
       id,
       "Download",
@@ -120,7 +117,7 @@ class LocalNotificationService {
           largeIcon: const DrawableResourceAndroidBitmap('app_icon'),
         ),
       ),
-      payload: "SIMPLE NOTIFICATION DATA",
+      payload: filePath,
     );
   }
 
